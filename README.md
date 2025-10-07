@@ -35,8 +35,8 @@ Untuk menjalankan aplikasi ini dengan lancar, pastikan perangkat Anda memenuhi s
 
 ### 💻 Lingkungan Pengembangan (Developer)
 
-- **Flutter SDK:** Versi [...]
-- **Dart SDK:** Versi [...]
+- **Flutter SDK:** Versi 3.35.3
+- **Dart SDK:** Versi 3.9.2
 - **Android Studio** atau **VS Code** dengan plugin Flutter.
 
 ---
@@ -46,6 +46,6 @@ Untuk menjalankan aplikasi ini dengan lancar, pastikan perangkat Anda memenuhi s
 ### 1. Kloning Repositori
 
 ```bash
-git clone [https://www.andarepository.com/](https://www.andarepository.com/)
-cd [nama-repo-anda]
+git clone https://github.com/r021n/learning_app.git
+cd learning_app
 ```
