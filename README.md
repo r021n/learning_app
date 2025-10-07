@@ -1,4 +1,4 @@
-# 🧠 [NAMA APLIKASI ANDA] - Kuis Cerdas Offline dengan LLM Lokal
+# 🧠 JELAS - Kuis Cerdas Offline dengan LLM Lokal
 
 ![Placeholder Logo Aplikasi](https://via.placeholder.com/150/0000FF/FFFFFF?text=Logo)
 
