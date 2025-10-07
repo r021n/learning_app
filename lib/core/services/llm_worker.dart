@@ -1,5 +1,6 @@
 import 'dart:isolate';
 import 'package:cactus/cactus.dart';
+import 'package:flutter/services.dart';
 
 class WorkerRequest {
   final int id;
@@ -16,6 +17,10 @@ class WorkerResponse {
 Future<void> llmWorkerEntryPoint(Map<String, dynamic> args) async {
   final mainSendPort = args['sendPort'] as SendPort;
   final localModelPath = args['modelPath'] as String;
+  final rootIsolateToken = args['rootIsolateToken'] as RootIsolateToken;
+
+  BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+
   final workerReceivePort = ReceivePort();
   CactusLM? lm;
 
@@ -28,6 +33,7 @@ Future<void> llmWorkerEntryPoint(Map<String, dynamic> args) async {
       threads: 4,
       gpuLayers: 0,
       onProgress: (progress, status, isError) {
+        print('Worker progress: $progress $status $isError');
         mainSendPort.send({
           'type': 'progress',
           'progress': progress,
@@ -37,7 +43,8 @@ Future<void> llmWorkerEntryPoint(Map<String, dynamic> args) async {
     );
 
     mainSendPort.send(true);
-  } catch (e) {
+  } catch (e, st) {
+    print('Worker: init gagal $e\n$st');
     mainSendPort.send(false);
     return;
   }
@@ -54,7 +61,6 @@ Future<void> llmWorkerEntryPoint(Map<String, dynamic> args) async {
         final startIndex = result.text.indexOf('{');
         final endIndex = result.text.indexOf('}');
         if (startIndex != -1 && endIndex != -1) {
-          // Adjusting substring to include the closing brace '}'
           final cleanJson = result.text.substring(startIndex, endIndex + 1);
           mainSendPort.send(WorkerResponse(message.id, cleanJson));
         } else {

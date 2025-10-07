@@ -1,95 +1,3 @@
-// import 'package:cactus/cactus.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'dart:io';
-// import 'package:flutter/services.dart';
-
-// class LlmService {
-//   CactusLM? _lm;
-//   bool _isInitialized = false;
-
-//   LlmService();
-
-//   bool get isInitialized => _isInitialized;
-
-//   Future<void> initialize() async {
-//     if (_isInitialized) return;
-//     try {
-//       final localModelPath = await _copyModelFromAssets();
-
-//       _lm = await CactusLM.init(
-//         modelUrl: localModelPath,
-//         contextSize: 2048,
-//         threads: 4,
-//         gpuLayers: 0,
-//         onProgress: (progress, status, isError) {
-//           print(
-//             'Model init: $status ${progress != null ? '${(progress * 100).toInt()}%' : ''}',
-//           );
-//         },
-//       );
-
-//       _isInitialized = true;
-//       print('Model LLM berhasil dimuat dari local storage');
-//     } on PlatformException catch (e) {
-//       print('Gagal memuat model LLM: $e');
-//       rethrow;
-//     } catch (e) {
-//       print('Error tidak terduga: $e');
-//       rethrow;
-//     }
-//   }
-
-//   Future<String> generateResponse(String prompt) async {
-//     if (!_isInitialized || _lm == null) {
-//       throw Exception('LlmService belum diinisialisasi');
-//     }
-//     try {
-//       final result = await _lm!.completion(
-//         [ChatMessage(role: 'user', content: prompt)],
-//         maxTokens: 200,
-//         temperature: 0.7,
-//       );
-//       return result.text;
-//     } catch (e) {
-//       print('Error saat menjalankan inferensi LLM: $e');
-//       return 'Error: $e';
-//     }
-//   }
-
-//   void dispose() {
-//     _lm?.dispose();
-//     _isInitialized = false;
-//   }
-
-//   Future<String> _copyModelFromAssets() async {
-//     try {
-//       final appDocDir = await getApplicationDocumentsDirectory();
-//       final localModelPath = '${appDocDir.path}/gemma3-1b-instruct.gguf';
-
-//       final localFile = File(localModelPath);
-//       if (await localFile.exists()) {
-//         print('Model sudah ada di local storage: $localModelPath');
-//         return localModelPath;
-//       }
-
-//       print('Menyalin model dari assets ke local storage...');
-
-//       final byteData = await rootBundle.load(
-//         'assets/models/gemma3-1b-instruct.gguf',
-//       );
-//       final buffer = byteData.buffer;
-
-//       await localFile.writeAsBytes(buffer.asUint8List());
-//       print('Model berhasil disalin ke: $localModelPath');
-//       return localModelPath;
-//     } catch (e) {
-//       print('Gagal menyalin model dari assets: $e');
-//       rethrow;
-//     }
-//   }
-// }
-
-// =================================================================================
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:io';
@@ -115,6 +23,7 @@ class LlmService {
       final workerArgs = {
         'sendPort': _mainReceivePort.sendPort,
         'modelPath': modelPath,
+        'rootIsolateToken': RootIsolateToken.instance!,
       };
 
       _isolate = await Isolate.spawn(llmWorkerEntryPoint, workerArgs);
