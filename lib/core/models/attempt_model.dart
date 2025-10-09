@@ -32,6 +32,9 @@ class Attempt extends HiveObject {
   @HiveField(8)
   bool isSynced;
 
+  @HiveField(9)
+  List<String> feedback;
+
   Attempt({
     required this.id,
     required this.materialId,
@@ -42,6 +45,7 @@ class Attempt extends HiveObject {
     required this.unmasteredTopics,
     required this.completedAt,
     this.isSynced = false,
+    required this.feedback,
   });
 
   Map<String, dynamic> toJson() {

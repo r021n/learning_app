@@ -26,13 +26,14 @@ class AttemptAdapter extends TypeAdapter<Attempt> {
       unmasteredTopics: (fields[6] as List).cast<String>(),
       completedAt: fields[7] as DateTime,
       isSynced: fields[8] as bool,
+      feedback: (fields[9] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Attempt obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class AttemptAdapter extends TypeAdapter<Attempt> {
       ..writeByte(7)
       ..write(obj.completedAt)
       ..writeByte(8)
-      ..write(obj.isSynced);
+      ..write(obj.isSynced)
+      ..writeByte(9)
+      ..write(obj.feedback);
   }
 
   @override

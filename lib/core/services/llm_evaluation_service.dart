@@ -35,6 +35,7 @@ class LlmEvaluationService {
     int totalScore = 0;
     List<String> allMastered = [];
     List<String> allUnmastered = [];
+    List<String> allFeedback = [];
 
     for (int i = 0; i < material.questions.length; i++) {
       final question = material.questions[i];
@@ -61,6 +62,9 @@ class LlmEvaluationService {
         if (jsonResponse['unmastered'] != null) {
           allUnmastered.addAll(List<String>.from(jsonResponse['unmastered']));
         }
+        if (jsonResponse['feedback'] != null) {
+          allFeedback.add(jsonResponse['feedback']);
+        }
       } catch (e) {
         print('Gagal parsing JSON dari LLM, menggunakan fallback: $e');
         totalScore += _fallbackKeywordMatching(
@@ -80,6 +84,7 @@ class LlmEvaluationService {
       masteredTopics: allMastered.toSet().toList(),
       unmasteredTopics: allUnmastered.toSet().toList(),
       isSynced: attempt.isSynced,
+      feedback: allFeedback,
     );
 
     await _repository.saveAttempt(evaluatedAttempt);

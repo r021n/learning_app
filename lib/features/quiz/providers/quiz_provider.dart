@@ -109,6 +109,7 @@ class QuizProvider with ChangeNotifier {
       masteredTopics: [],
       unmasteredTopics: [],
       isSynced: false,
+      feedback: [],
     );
 
     await _attemptProvider.saveAttempt(attempt);
